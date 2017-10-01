@@ -1,0 +1,52 @@
+#background{
+	width: 1652px;
+	height: 909px;
+    margin: 0px;
+    padding: 0px; 	
+	background-image: url("background.jpg");
+}
+
+h1{
+	text-align: center;
+	color: green;
+	font-size: 80px; 
+}
+
+p{
+	text-align: center; 
+	color : black; 
+	font-size: 50px; 
+}
+
+div{
+	height: 530px;
+	width: 558px;
+	background-color: blue; 
+	margin: auto; 
+}
+
+.holes{
+	border-radius: 100%;
+	width: 50px;
+	height: 50px;
+	background-color: white; 
+	display: inline-block; 
+	margin: 12.8px; 
+}
+
+table{
+	margin: 0px;
+	padding: 0px;´
+}
+
+.button {
+    width: 0px;
+	background-color: green; 
+    height: 0px;
+    border-left: 32px solid blue;
+	border-right:32px solid blue;
+	border-bottom: 0px solid blue; 
+	padding: 0px;
+	margin-left: 5px; 
+	border-top: 30px solid green;
+}
