@@ -1,4 +1,5 @@
-      var column = new Array(8);
+    var column = new Array(8);
+	var emergencyStop = 0;
 	var currentPlayer; 
 	var currentColor; 
 	var gameField = new Array(8);
@@ -242,8 +243,7 @@
 		
 		
 		//here we decide through random, if the user or the Computer will start the game
-		//var random = Math.round(Math.random());
-		var random = 0; 
+		var random = Math.round(Math.random());
 		if(random==0){
 			currentPlayer = "User";
 			currentColor = "yellow"; 
@@ -355,6 +355,7 @@
 		$("#button7").css({"visibility":"hidden"});
 		$("#notificationField").css("font-size",80);
 		$("#notificationField").text(Winner + " has won!");	
+		restart();
 	}
 	
 	function computerMove(){
@@ -786,6 +787,7 @@
 	}
 	
 	function markComputerMove(i, j){
+		EmergencyStop = 0;
 		switch(i){
 			case 1: switch(j){
 						case 1: $("#hole1").css("background-color",currentColor);
@@ -1037,6 +1039,7 @@
 	}
 	
 	function computerRandomMove(){
+		emergencyStop++;
 		var random2 = Math.round(Math.random()*6)+1;
 		var stop = 0; 
 		for(var j = 1; j<gameField[0].length; j++){
@@ -1045,10 +1048,17 @@
 				break; 
 			}
 			if(gameField[random2][j]!="Computer"&&gameField[random2][j]!="User"&&(j==6||(gameField[random2][j+1]=="Computer"||gameField[random2][j+1]=="User"))){// comp chooses random column and checks if free and 
-				markComputerMove(random2, j);																													  // if the space below is ground or full
+				var willCauseWin = scanForComputerMoveMakeWinPossible(random2, j);
+				if(willCauseWin==1|| EmergencyStop>25){ //here we need the emergencyStop to ensure that if it's the last possible move for the computer
+				markComputerMove(random2, j);			//he has to make it even if it will cause the Player to win																							 			  // if the space below is ground or full
 				getCurrentPlayerAndColor(); 
 				stop = 0;0
 				break;
+				}
+				else{
+					computerRandomMove();
+					break;
+				}
 			}
 			else if(j==gameField[0].length-1){
 				if(random2==7){
@@ -1362,7 +1372,7 @@
 					//      _
 					//      ? _
 					//        ?
-					if(i>=3 && i<=5 && j>=3 && j<=4 && typeof(gameField[i-1][j-1])=="undefined" && typeof(gameField[i-1][j])!="undefined" && gameField[i+1][j+1] =="Computer" && typeof(gameField[i+2][j+2])=="undefined" && typeof(gameField[i+2][j+3])!="undefined" && typeof(gameField[i+3][j+3])=="undefined" && (typeof(gameField[i+3][j+4])!="undefined"|| j==3)){
+					if(i>=2 && i<=4 && j>=2 && j<=3 && typeof(gameField[i-1][j-1])=="undefined" && typeof(gameField[i-1][j])!="undefined" && gameField[i+1][j+1] =="Computer" && typeof(gameField[i+2][j+2])=="undefined" && typeof(gameField[i+2][j+3])!="undefined" && typeof(gameField[i+3][j+3])=="undefined" && (typeof(gameField[i+3][j+4])!="undefined"|| j==3)){
 						parameterComputerWin[0] = 1;
 						parameterComputerWin[1] = i+1;
 					    parameterComputerWin[2] = j+1;
@@ -1449,5 +1459,399 @@
 		return parameterComputerWin;
 	}
 	
+	function scanForComputerMoveMakeWinPossible(posX, posY){	
+		var gameField1 = new Array(8);
+		for(var i = 0; i<column.length; i++){
+			gameField1[i]=new Array(7); 
+		}
+		for(var i = 0; i<gameField1.length; i++){
+			for(var j = 0; j<gameField1[0].length; j++){
+				gameField1[i][j] = gameField[i][j];				
+			}
+		}
+		gameField1[posX][posY]="Computer";
+		var blockHor1 = blockHorizontal1(gameField1);
+		var blockDiaNr11 = blockDiagonalNr11(gameField1);
+		var blockDiaNr21 = blockDiagonalNr21(gameField1);
+		
+		if(blockHor1[1] == 2 || blockDiaNr11[1] == 2 || blockDiaNr21[1] == 2){
+			return 2;
+		} 
+		else{
+			return 1; 
+		}
+	}
+	
+	function blockHorizontal1(gameField1){
+		//here we initial parameterComputerHor
+		
+		parameterComputerHor[0]=0;
+		parameterComputerHor[1]=0;
+		parameterComputerHor[2]=0;
+		
+		for(var i = 1; i<gameField1.length; i++){
+			for(var j = 1; j<gameField1[0].length; j++){
+				if(gameField1[i][j]=="User"){
+				//here we block a diagonal with 
+				//_ X X X
+				//?
+					if(i>=2 && i<=5 && typeof(gameField1[i-1][j])=="undefined" && (typeof(gameField1[i-1][j+1])!="undefined" || j == 6) && gameField1[i+1][j]=="User" && gameField1[i+2][j]=="User"){
+						parameterComputerHor[0]=2;
+						parameterComputerHor[1]=i-1; 
+						parameterComputerHor[2]=j;
+						return parameterComputerHor;
+					}
+				
+				//here we block a diagonal with 
+				//X X X _
+				//      ?
+					if(i<=4 && gameField1[i+1][j]=="User" && gameField1[i+2][j]=="User" && typeof(gameField1[i+3][j])=="undefined" && (typeof(gameField1[i+3][j+1])!="undefined" || j == 6)){
+						parameterComputerHor[0]=2;
+						parameterComputerHor[1]=i+3; 
+						parameterComputerHor[2]=j;
+						return parameterComputerHor;
+					}
+				
+				//here we block a diagonal with 
+				//X _ X X
+				//  ?
+					if(i<=4 && typeof(gameField1[i+1][j])=="undefined" && (typeof(gameField1[i+1][j+1])!="undefined" || j == 6) && gameField1[i+2][j]=="User" && gameField1[i+3][j]=="User"){
+						parameterComputerHor[0]=2;
+						parameterComputerHor[1]=i+1; 
+						parameterComputerHor[2]=j;
+						return parameterComputerHor;
+					}
+				
+				//here we block a diagonal with 
+				//X X _ X
+				//    ?
+					if(i<=4 && gameField1[i+1][j]=="User" && typeof(gameField1[i+2][j])=="undefined" && (typeof(gameField1[i+2][j+1])!="undefined" || j == 6) && gameField1[i+3][j]=="User"){
+						parameterComputerHor[0]=2;
+						parameterComputerHor[1]=i+2; 
+						parameterComputerHor[2]=j;
+						return parameterComputerHor;
+					}
+					
+				//here we block a diagonal with 
+				//_ X _ X _
+ 				//?   ?   ?
+					if(i>=2 && i<=4 && typeof(gameField1[i-1][j]) == "undefined" && typeof(gameField1[i+1][j]) == "undefined" && gameField1[i+2][j]=="User" && typeof(gameField1[i+3][j]) == "undefined" && ((typeof(gameField1[i-1][j+1])!="undefined" && typeof(gameField1[i+1][j+1])!="undefined" && typeof(gameField1[i+3][j+1])!="undefined")|| j==6)){
+						parameterComputerHor[0]=1;
+						parameterComputerHor[1]=i+1; 
+						parameterComputerHor[2]=j;
+					}
+				
+				//here we block a diagonal with 
+				//_ _ X X _
+ 				//? ?      ?
+					if(i>=3 && i<=5 && typeof(gameField1[i-2][j]) == "undefined" && typeof(gameField1[i-1][j]) == "undefined" && gameField1[i+1][j]=="User" && typeof(gameField1[i+2][j]) == "undefined" && ((typeof(gameField1[i-2][j+1])!="undefined" && typeof(gameField1[i-1][j+1])!="undefined" && typeof(gameField1[i+2][j+1])!="undefined")|| j==6)){
+						parameterComputerHor[0]=1;
+						parameterComputerHor[1]=i-1; 
+						parameterComputerHor[2]=j;
+					}
+				
+				//here we block a diagonal with 
+				//_ X X _ _
+ 				//?     ? ?
+					if(i>=2 && i<=4 && typeof(gameField1[i-1][j]) == "undefined" && gameField1[i+1][j]=="User" && typeof(gameField1[i+2][j]) == "undefined" && typeof(gameField1[i+3][j]) == "undefined" && ((typeof(gameField1[i-1][j+1])!="undefined" && typeof(gameField1[i+2][j+1])!="undefined" && typeof(gameField1[i+3][j+1])!="undefined")|| j==6)){
+						parameterComputerHor[0]=1;
+						parameterComputerHor[1]=i+2; 
+						parameterComputerHor[2]=j;
+					}
+
+				//here we block a diagonal with 
+				//_ _ _ X X _
+ 				//? ? ?     ?
+					if(i>=4 && i<=5 && typeof(gameField1[i-3][j])=="undefined" &&typeof(gameField1[i-2][j]) == "undefined" && typeof(gameField1[i-1][j]) == "undefined" && gameField1[i+1][j]=="User" && typeof(gameField1[i+2][j]) == "undefined" && ((typeof(gameField1[i-3][j+1])!="undefined" && typeof(gameField1[i-2][j+1])!="undefined" && typeof(gameField1[i-1][j+1])!="undefined" && typeof(gameField1[i+2][j+1])!="undefined")|| j==6)){
+						parameterComputerHor[0]=1;
+						parameterComputerHor[1]=i-1; 
+						parameterComputerHor[2]=j;
+					}
+				}	
+			}
+		}
+		return parameterComputerHor;
+	}
+	
+	function blockDiagonalNr11(gameField1){
+		//Diagonal Nr1 is diagonal north east or south west 
+		//here we initial parameterComputerDiaNr1
+		
+		parameterComputerDiaNr1[0]=0;
+		parameterComputerDiaNr1[1]=0;
+		parameterComputerDiaNr1[2]=0;
+		
+		
+		for(var i = 1; i<gameField1.length; i++){
+			for(var j = 1; j<gameField1[0].length; j++){
+				if(gameField1[i][j]=="User"){ 
+					// here we block a diagonal with 
+					//      _
+					//    X ?
+					//  X
+					//X
+					if(i<5 && j>3 && gameField1[i+1][j-1]=="User"&&gameField1[i+2][j-2]=="User"&&typeof(gameField1[i+3][j-3])=="undefined"&&typeof(gameField1[i+3][j-2])!="undefined"){
+						parameterComputerDiaNr1[0]=2;
+						parameterComputerDiaNr1[1]=i+3; 
+						parameterComputerDiaNr1[2]=j-3;
+						return parameterComputerDiaNr1;
+					}
+					
+					// here we block a diagonal with 
+					//      X
+					//    X
+					//  X
+					//_
+					//?
+					if(i>=2 && i<=5 && j<=5 && j>=3 && (typeof(gameField1[i-1][j+2])!="undefined" || j==5) && typeof(gameField1[i-1][j+1])=="undefined" && gameField1[i+1][j-1]=="User" && gameField1[i+2][j-2]=="User"){
+						parameterComputerDiaNr1[0]=2;
+						parameterComputerDiaNr1[1]=i-1; 
+						parameterComputerDiaNr1[2]=j+1;
+						return parameterComputerDiaNr1;
+					}
+					
+					// here we block a diagonal with 
+					//      X
+					//    _
+					//  X ?
+ 					//X
+					else if(i<=4 && j>=4 && gameField1[i+1][j-1]=="User"&&typeof(gameField1[i+2][j-2])=="undefined"&&typeof(gameField1[i+2][j-1])!="undefined" &&gameField1[i+3][j-3]=="User"){
+						parameterComputerDiaNr1[0] = 2; 
+						parameterComputerDiaNr1[1] = i+2;
+						parameterComputerDiaNr1[2] = j-2;
+						return parameterComputerDiaNr1; 
+					}
+					
+					//here we block a diagonal with 
+					//      X
+					//    X
+					//  _
+					//X ?
+					else if(i<=4 && j>=4 && typeof(gameField1[i+1][j-1])=="undefined"&&typeof(gameField1[i+1][j])!="undefined"&&gameField1[i+2][j-2]=="User"&& gameField1[i+3][j-3]=="User"){
+						parameterComputerDiaNr1[0] = 2; 
+						parameterComputerDiaNr1[1] = i+1; 
+						parameterComputerDiaNr1[2] = j-1;
+						return parameterComputerDiaNr1; 
+					}
+					
+					//here we prevent a diagonal with 
+					//        _
+					//      X ?
+					//    _
+					//  X ?
+					//_
+					//?
+					else if(i>=2 && i<=4 && j<=5 && j>=4 && typeof(gameField1[i-1][j+1]) == "undefined" && (typeof(gameField1[i-1][j+2]) !="undefined" || j==5) && typeof(gameField1[i+1][j-1])=="undefined" && (typeof(gameField1[i+1][j])!="undefined" )&& gameField1[i+2][j-2] == "User" && typeof(gameField1[i+3][j-3])=="undefined" && typeof(gameField1[i+3][j-2])!="undefined"){
+						parameterComputerDiaNr1[0] = 1; 
+						parameterComputerDiaNr1[1] = i+1; 
+						parameterComputerDiaNr1[2] = j-1;
+					}
+					
+					//here we prevent a diagonal with 
+					//        _
+					//      _ ?
+ 					//    X ?
+ 					//  X
+					//_				
+					//?
+					else if(i>=2 && i<=4 && j>=4 && j<=5 && typeof(gameField1[i-1][j+1]) == "undefined" && (typeof(gameField1[i-1][j+2])!= "undefined" || j == 5) && gameField1[i+1][j-1]=="User" && typeof(gameField1[i+2][j-2])=="undefined" && typeof(gameField1[i+2][j-1])!="undefined" && typeof(gameField1[i+3][j-3])=="undefined" && typeof(gameField1[i+3][j-2])!="undefined"){
+						parameterComputerDiaNr1[0] = 1 
+						parameterComputerDiaNr1[1] = i+2; 
+						parameterComputerDiaNr1[2] = j-2;					
+					}
+					
+					//here we prevent a diagonal with 
+					//        _
+					//      X ?
+					//    X 
+					//  _					
+					//_ ?
+					//?
+					else if(i>=3 && i<=5 && j>=3 && j<=4 && typeof(gameField1[i-2][j+2])=="undefined" && (typeof(gameField1[i-2][j+3])!="undefined" || j == 4) && typeof(gameField1[i-1][j+1])=="undefined" && typeof(gameField1[i-1][j+2])!="undefined" && gameField1[i+1][j-1]=="User" && typeof(gameField1[i+2][j-2])=="undefined" && typeof(gameField1[i+2][j-1])!="undefined"){
+						parameterComputerDiaNr1[0] = 1 
+						parameterComputerDiaNr1[1] = i-1;
+						parameterComputerDiaNr1[2] = j+1; 
+					}
+			    }	
+			}
+		}
+		return parameterComputerDiaNr1;
+	}
+	
+	function blockDiagonalNr21(gameField1){
+		//Diagonal Nr.2 is north west or south east
+		//here we initial parameterComputerDiaNr2
+		
+		parameterComputerDiaNr2[0]=0;
+		parameterComputerDiaNr2[1]=0;
+		parameterComputerDiaNr2[2]=0;
+		
+		
+		for(var i = 1; i<gameField1.length; i++){
+			for(var j = 1; j<gameField1[0].length; j++){
+				if(gameField1[i][j]=="User"){ 
+					
+					// here we block a diagonal with 
+					//_ 
+					//? X
+					//	  X
+					//      X
+					if( i>=2 && i<=5 && j<=4 && j>=2 && gameField1[i+1][j+1]=="User" && gameField1[i+2][j+2]=="User" && typeof(gameField1[i-1][j-1])=="undefined" && typeof(gameField1[i-1][j])!= "undefined"){
+						parameterComputerDiaNr2[0]=2;
+						parameterComputerDiaNr2[1]=i-1;
+						parameterComputerDiaNr2[2]=j-1;
+						return parameterComputerDiaNr2;
+					}
+					
+					// here we block a diagonal with 
+					//X		
+					//  X  
+					//    X
+					//      _
+					//      ?
+					if(i<=4 && j<=3 && gameField1[i+1][j+1]=="User" && gameField1[i+2][j+2]=="User" && typeof(gameField1[i+3][j+3])=="undefined" && (typeof(gameField1[i+3][j+4])!="undefined" || j==3)){
+						parameterComputerDiaNr2[0]=2;
+						parameterComputerDiaNr2[1]=i+3; 
+						parameterComputerDiaNr2[2]=j+3;
+						return parameterComputerDiaNr2;
+					}
+					
+					// here we block a diagonal with 
+					//X		
+					//  _  
+					//  ? X
+					//      X
+					if(i<=4 && j<=3 && typeof(gameField1[i+1][j+1])=="undefined" && typeof(gameField1[i+1][j+2])!="undefined" && gameField1[i+2][j+2]=="User" && gameField1[i+3][j+3]=="User"){
+						parameterComputerDiaNr2[0]=2;
+						parameterComputerDiaNr2[1]=i+1; 
+						parameterComputerDiaNr2[2]=j+1;
+						return parameterComputerDiaNr2;
+					}
+					
+					// here we block a diagonal with 
+					//X		
+					//  X  
+					//    _
+					//    ? X
+					if(i<=4 && j<=3 && gameField1[i+1][j+1]=="User" && typeof(gameField1[i+2][j+2])=="undefined" && typeof(gameField1[i+2][j+3])!="undefined" && gameField1[i+3][j+3]=="User"){
+						parameterComputerDiaNr2[0]=2;
+						parameterComputerDiaNr2[1]=i+2; 
+						parameterComputerDiaNr2[2]=j+2;
+						return parameterComputerDiaNr2;
+					}
+					
+					// here we block a diagonal with 
+					//_		
+					//? X  
+					//    _
+					//    ? X
+					//        _
+					//        ?
+					if(i>=2 && i<=4 && j>=2 && j<=3 && typeof(gameField1[i-1][j-1])=="undefined" && typeof(gameField1[i-1][j])!="undefined" && typeof(gameField1[i+1][j+1])=="undefined" && typeof(gameField1[i+1][j+2])!="undefined" && gameField1[i+2][j+2] == "User" && typeof(gameField1[i+3][j+3])=="undefined" && (typeof(gameField1[i+3][j+4])!="undefined"|| j==3)){
+						parameterComputerDiaNr2[0]=1;
+						parameterComputerDiaNr2[1]=i+1;
+						parameterComputerDiaNr2[2]=j+1;
+					}
+					
+					// here we block a diagonal with 
+					//_		
+					//? _  
+					//  ? X
+					//      X
+					//        _
+					//        ?
+					if(i>=3 && i<=5 && j>=3 && j<=4 && typeof(gameField1[i-2][j-2])=="undefined" && typeof(gameField1[i-2][j-1])!="undefined" && typeof(gameField1[i-1][j-1])=="undefined" && typeof(gameField1[i-1][j])!="undefined" && gameField1[i+1][j+1] =="User" && typeof(gameField1[i+2][j+2])=="undefined" && (typeof(gameField1[i+2][j+3])!="undefined"|| j==4)){
+						parameterComputerDiaNr2[0]=1;
+						parameterComputerDiaNr2[1]=i-1; 
+						parameterComputerDiaNr2[2]=j-1;
+					}
+					
+					// here we block a diagonal with 
+					//_		
+					//? X  
+					//    X
+					//      _
+					//      ? _
+					//        ?
+					if(i>=3 && i<=5 && j>=3 && j<=4 && typeof(gameField1[i-1][j-1])=="undefined" && typeof(gameField1[i-1][j])!="undefined" && gameField1[i+1][j+1] =="User" && typeof(gameField1[i+2][j+2])=="undefined" && typeof(gameField1[i+2][j+3])!="undefined" && typeof(gameField1[i+3][j+3])=="undefined" && (typeof(gameField1[i+3][j+4])!="undefined"|| j==3)){
+						parameterComputerDiaNr2[0]=1;
+						parameterComputerDiaNr2[1]=i+1; 
+						parameterComputerDiaNr2[2]=j+1;
+					}
+			    }	
+			}
+		}
+		return parameterComputerDiaNr2;
+	}
+	
+	function restart(){
+			$("#restart").css("visibility","visible");
+			$("#restart").prop('disabled',null); 
+			$("#restart").on("click", function(){ 
+				emergencyStop = 0;
+				win = false;
+				$("#hole1").css("background-color","white");
+				$("#hole2").css("background-color","white");
+				$("#hole3").css("background-color","white");
+				$("#hole4").css("background-color","white");
+				$("#hole5").css("background-color","white");
+				$("#hole6").css("background-color","white");
+				$("#hole7").css("background-color","white");
+				$("#hole8").css("background-color","white");
+				$("#hole9").css("background-color","white");
+				$("#hole10").css("background-color","white");
+				$("#hole11").css("background-color","white");
+				$("#hole12").css("background-color","white");
+				$("#hole13").css("background-color","white");
+				$("#hole14").css("background-color","white");
+				$("#hole15").css("background-color","white");
+				$("#hole16").css("background-color","white");
+				$("#hole17").css("background-color","white");
+				$("#hole18").css("background-color","white");
+				$("#hole19").css("background-color","white");
+				$("#hole20").css("background-color","white");
+				$("#hole21").css("background-color","white");
+				$("#hole22").css("background-color","white");
+				$("#hole23").css("background-color","white");
+				$("#hole24").css("background-color","white");
+				$("#hole25").css("background-color","white");
+				$("#hole26").css("background-color","white");
+				$("#hole27").css("background-color","white");
+				$("#hole28").css("background-color","white");
+				$("#hole29").css("background-color","white");
+				$("#hole30").css("background-color","white");
+				$("#hole31").css("background-color","white");
+				$("#hole32").css("background-color","white");
+				$("#hole33").css("background-color","white");
+				$("#hole34").css("background-color","white");
+				$("#hole35").css("background-color","white");
+				$("#hole36").css("background-color","white");
+				$("#hole37").css("background-color","white");
+				$("#hole38").css("background-color","white");
+				$("#hole39").css("background-color","white");
+				$("#hole40").css("background-color","white");
+				$("#hole41").css("background-color","white");
+				$("#hole42").css("background-color","white");
+				$("#notificationField").text("");
+				$("#button1").css({"visibility":"visible"});
+				$("#button2").css({"visibility":"visible"});
+				$("#button3").css({"visibility":"visible"});
+				$("#button4").css({"visibility":"visible"});
+				$("#button5").css({"visibility":"visible"});
+				$("#button6").css({"visibility":"visible"});
+				$("#button7").css({"visibility":"visible"});
+				$("#button1").prop('disabled',null); 
+				$("#button2").prop('disabled',null); 
+				$("#button3").prop('disabled',null); 
+				$("#button4").prop('disabled',null); 
+				$("#button5").prop('disabled',null); 
+				$("#button6").prop('disabled',null); 
+				$("#button7").prop('disabled',null); 
+				$("#restart").prop('disabled',true);
+				start();
+				$("#restart").css("visibility","hidden");
+			    $("#restart").prop('disabled',true); 
+			}) 
+	}
 	
 	$(document).ready(main);

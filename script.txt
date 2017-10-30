@@ -1,0 +1,1227 @@
+      var column = new Array(8);
+	var currentPlayer; 
+	var currentColor; 
+	var gameField = new Array(8);
+	var lengthOfRowSameColor = 0; 
+	var checked = new Array(8); 
+	var win = false; 
+	var computerTime = 1000; 
+	var parameterComputerHor = new Array(3);
+	var parameterComputerVer = new Array(3);
+	var parameterComputerDiaNr1 = new Array(3);
+	
+	function main(){
+	$("#body").hide();
+	$("#body").css("visibility","visible");
+	$("#body").fadeIn(2000);
+		start(); //here we call the function start, which gives us the starting player and makes sure that everything is ready
+		
+		//in the following lines we give each button an Actionlistener, that will paint the hole with the
+		//currentColor 
+		//the array column[n] represents the column n and has saved the number of tokens in column n 	
+		$("#button1").on("click", function(){ 
+			switch(column[1]){
+				case 0: $("#hole36").css("background-color",currentColor);
+				        gameField[1][6]=currentPlayer;
+						break; 
+				case 1: $("#hole29").css("background-color",currentColor);
+						gameField[1][5]=currentPlayer;
+						break;
+				case 2: $("#hole22").css("background-color",currentColor);
+						gameField[1][4]=currentPlayer;
+						break;
+				case 3: $("#hole15").css("background-color",currentColor);
+						gameField[1][3]=currentPlayer;
+						break;
+				case 4: $("#hole8").css("background-color",currentColor);
+						gameField[1][2]=currentPlayer;
+						break;
+				case 5: $("#hole1").css("background-color",currentColor);
+						gameField[1][1]=currentPlayer;
+				        $("#button1").css({"visibility":"hidden"});
+						break;
+				default:console.log("Error with column variable"); 
+						break; 
+			}
+			column[1]++;
+			searchForWinner(); 
+			getCurrentPlayerAndColor();
+		});
+		
+		$("#button2").on("click", function(){
+			switch(column[2]){
+				case 0: $("#hole37").css("background-color",currentColor);
+						gameField[2][6]=currentPlayer;
+						break; 
+				case 1: $("#hole30").css("background-color",currentColor);
+						gameField[2][5]=currentPlayer;
+						break;
+				case 2: $("#hole23").css("background-color",currentColor);
+						gameField[2][4]=currentPlayer;
+						break;
+				case 3: $("#hole16").css("background-color",currentColor);
+						gameField[2][3]=currentPlayer;
+						break;
+				case 4: $("#hole9").css("background-color",currentColor);
+						gameField[2][2]=currentPlayer;
+						break;
+				case 5: $("#hole2").css("background-color",currentColor);
+				        $("#button2").css({"visibility":"hidden"});
+						gameField[2][1]=currentPlayer;
+						break;
+				default:console.log("Error with column variable"); 
+						break; 
+			}
+			column[2]++;
+			searchForWinner();
+			getCurrentPlayerAndColor();
+		});
+		
+		$("#button3").on("click", function(){
+			switch(column[3]){
+				case 0: $("#hole38").css("background-color",currentColor);
+						gameField[3][6]=currentPlayer;
+						break; 
+				case 1: $("#hole31").css("background-color",currentColor);
+						gameField[3][5]=currentPlayer;
+						break;
+				case 2: $("#hole24").css("background-color",currentColor);
+						gameField[3][4]=currentPlayer;
+						break;
+				case 3: $("#hole17").css("background-color",currentColor);
+						gameField[3][3]=currentPlayer;
+						break;
+				case 4: $("#hole10").css("background-color",currentColor);
+						gameField[3][2]=currentPlayer;
+						break;
+				case 5: $("#hole3").css("background-color",currentColor);
+				        $("#button3").css({"visibility":"hidden"});
+						gameField[3][1]=currentPlayer;
+						break;
+				default:console.log("Error with column variable"); 
+						break; 
+			}
+			column[3]++;
+			searchForWinner();
+			getCurrentPlayerAndColor();
+		});
+		
+		$("#button4").on("click", function(){
+			switch(column[4]){
+				case 0: $("#hole39").css("background-color",currentColor);
+						gameField[4][6]=currentPlayer;
+						break; 
+				case 1: $("#hole32").css("background-color",currentColor);
+						gameField[4][5]=currentPlayer;
+						break;
+				case 2: $("#hole25").css("background-color",currentColor);
+						gameField[4][4]=currentPlayer;
+						break;
+				case 3: $("#hole18").css("background-color",currentColor);
+						gameField[4][3]=currentPlayer;
+						break;
+				case 4: $("#hole11").css("background-color",currentColor);
+						gameField[4][2]=currentPlayer;
+						break;
+				case 5: $("#hole4").css("background-color",currentColor);
+						gameField[4][1]=currentPlayer;
+				        $("#button4").css({"visibility":"hidden"});
+						break;
+				default:console.log("Error with column variable"); 
+						break; 
+			}
+			column[4]++;
+			searchForWinner();
+			getCurrentPlayerAndColor();
+		});
+		
+		$("#button5").on("click", function(){
+			switch(column[5]){
+				case 0: $("#hole40").css("background-color",currentColor);
+						gameField[5][6]=currentPlayer;
+						break; 
+				case 1: $("#hole33").css("background-color",currentColor);
+						gameField[5][5]=currentPlayer;
+						break;
+				case 2: $("#hole26").css("background-color",currentColor);
+						gameField[5][4]=currentPlayer;
+						break;
+				case 3: $("#hole19").css("background-color",currentColor);
+						gameField[5][3]=currentPlayer;
+						break;
+				case 4: $("#hole12").css("background-color",currentColor);
+						gameField[5][2]=currentPlayer;
+						break;
+				case 5: $("#hole5").css("background-color",currentColor);
+						gameField[5][1]=currentPlayer;
+						$("#button5").css({"visibility":"hidden"});
+						break;
+				default:console.log("Error with column variable"); 
+						break; 
+			}
+			column[5]++;
+			searchForWinner();
+			getCurrentPlayerAndColor();
+		});
+		
+		$("#button6").on("click", function(){
+			switch(column[6]){
+				case 0: $("#hole41").css("background-color",currentColor);
+						gameField[6][6]=currentPlayer;
+						break; 
+				case 1: $("#hole34").css("background-color",currentColor);
+						gameField[6][5]=currentPlayer;
+						break;
+				case 2: $("#hole27").css("background-color",currentColor);
+						gameField[6][4]=currentPlayer;
+						break;
+				case 3: $("#hole20").css("background-color",currentColor);
+						gameField[6][3]=currentPlayer;
+						break;
+				case 4: $("#hole13").css("background-color",currentColor);
+						gameField[6][2]=currentPlayer;
+						break;
+				case 5: $("#hole6").css("background-color",currentColor);
+						gameField[6][1]=currentPlayer;
+						$("#button6").css({"visibility":"hidden"});
+						break;
+				default:console.log("Error with column variable"); 
+						break; 
+			}
+			column[6]++;
+			searchForWinner();
+			getCurrentPlayerAndColor();
+		});
+		
+			$("#button7").on("click", function(){
+			switch(column[7]){
+				case 0: $("#hole42").css("background-color",currentColor);
+						gameField[7][6]=currentPlayer;
+						break; 
+				case 1: $("#hole35").css("background-color",currentColor);
+						gameField[7][5]=currentPlayer;
+						break;
+				case 2: $("#hole28").css("background-color",currentColor);
+						gameField[7][4]=currentPlayer;
+						break;
+				case 3: $("#hole21").css("background-color",currentColor);
+						gameField[7][3]=currentPlayer;
+						break;
+				case 4: $("#hole14").css("background-color",currentColor);
+						gameField[7][2]=currentPlayer;
+						break;
+				case 5: $("#hole7").css("background-color",currentColor);
+						gameField[7][1]=currentPlayer;
+						$("#button7").css({"visibility":"hidden"});
+						break;
+				default:console.log("Error with column variable"); 
+						break; 
+			}
+			column[7]++;
+			searchForWinner();
+			getCurrentPlayerAndColor();
+		});
+	}
+
+	function start(){
+		//this loop says that in every column there are 0 tokens at the beginning
+		for(var i = 0; i<column.length; i++){
+				column[i]=0; 
+		} 
+		
+	//here we create the gamefield as a 2 dimensional array where e.g. gamefield[2][4] represents the forth field from the bottom of the 2nd column from the left
+	//Later on we use this to give this field the value "Computer" or "User" depending on the game token that is inserted in this field. 
+		for(var i = 0; i<column.length; i++){
+				gameField[i]=new Array(7); 
+		}
+		
+		//here we give each part of parameterComputerHor the value 0 such that we can pass it on later even if we haven't reached the part yet where we gave it values
+		for(var i = 0; i<parameterComputerHor.length; i++){
+				parameterComputerHor[i]=0; 
+		}
+		
+		
+		//here we decide through random, if the user or the Computer will start the game
+		//var random = Math.round(Math.random());
+		var random = 0; 
+		if(random==0){
+			currentPlayer = "User";
+			currentColor = "yellow"; 
+			$("#notificationField").text("Du darfst anfangen.")
+		}
+		else{
+			currentPlayer = "Computer";
+			currentColor = "red"; 
+			setTimeout(computerFirstMove, computerTime);
+			$("#notificationField").text("Der Computer darf anfangen.")
+		}
+	}
+	
+	function getCurrentPlayerAndColor(){
+		if(win==false){
+			if(currentPlayer == "User"){
+				currentColor = "red"; 
+				currentPlayer = "Computer"
+				$("#notificationField").text("Der Computer ist am Zug.")
+				$("#button1").prop('disabled','true'); 
+				$("#button2").prop('disabled','true'); 
+				$("#button3").prop('disabled','true'); 
+				$("#button4").prop('disabled','true'); 
+				$("#button5").prop('disabled','true'); 
+				$("#button6").prop('disabled','true'); 
+				$("#button7").prop('disabled','true'); 
+				setTimeout(computerMove, computerTime)
+			}
+			else{
+				currentColor = "yellow";
+				currentPlayer ="User"; 
+				$("#notificationField").text("Du bist am Zug.")
+			}
+		}
+	}
+	
+	function searchForWinner(){
+		checkWinner("Computer");
+		checkWinner("User");
+	}
+	
+	function checkWinner(Player){
+		for(var i = 0; i<column.length; i++){
+				checked[i]=new Array(7); 
+		}
+		//here we install check and also reset it in further rounds such that we can check again if we have 4 in a row
+				for(var i = 1; i<checked.length; i++){
+					for(var j = 1; j<checked[0].length;j++){
+						checked[i][j]=0; 
+					}
+				}
+				
+//First we check for a horizontal 4 in a row
+		
+		for(var i = 1; i<gameField.length; i++){
+			for(var j = 1; j<gameField[0].length; j++){
+				if(gameField[i][j]==Player&&checked[i][j]==0){ //here we use the check variable to make sure that when we have a row of 3 not every one of those stones is checked and therefore
+					checked[i][j] = 1
+					if(i!=7){
+						if(gameField[i+1][j]==Player){			   //lengthOfRowSameColor would be 3 times the as big
+							checked[i+1][j] = 1 //1 is true 
+							lengthOfRowSameColor=2; 
+							if(i!=6){
+								if(gameField[i+2][j]==Player){
+									checked[i+2][j] = 1
+									lengthOfRowSameColor++;
+									if(i!=5){
+										if(gameField[i+3][j]==Player){
+										checked[i+3][j] = 1
+										lengthOfRowSameColor++;
+										}	
+									}	
+								}
+							}
+						}
+					}
+					if(i!=1){
+						if(gameField[i-1][j]==Player){
+							checked[i-1][j] = 1
+							lengthOfRowSameColor=2; 
+							if(i!=2){	if(gameField[i-2][j]==Player){
+									checked[i-2][j] = 1
+									lengthOfRowSameColor++;
+									if(i!=3){	
+										if(gameField[i-3][j]==Player){
+											checked[i-3][j] = 1
+											lengthOfRowSameColor++;
+										}	
+									}
+								}
+							}
+						}
+					}
+					if(lengthOfRowSameColor>=4){
+					sbHasWon(Player);
+				    }
+				
+				}
+			}
+		}
+		
+		
+		lengthOfRowSameColor=0;
+		
+		for(var i = 1; i<checked.length; i++){
+					for(var j = 1; j<checked[0].length;j++){
+						checked[i][j]=0; 
+					}
+				}
+		
+		//here we search for a vertical 4 in a row
+		for(var i = 1; i<gameField.length; i++){
+			for(var j = 1; j<gameField[0].length; j++){
+				if(gameField[i][j]==Player&&checked[i][j]==0){ //here we use the check variable to make sure that when we have a row of 3 not every one of those stones is checked and therefore
+					checked[i][j] = 1
+					if(j!=6){
+						if(gameField[i][j+1]==Player){			   //lengthOfRowSameColor would be 3 times the as big
+							checked[i][j+1] = 1 //1 is true 
+							lengthOfRowSameColor=2; 
+							if(j!=5){
+								if(gameField[i][j+2]==Player){
+									checked[i][j+2] = 1
+									lengthOfRowSameColor++;
+									if(j!=4){
+										if(gameField[i][j+3]==Player){
+										checked[i][j+3] = 1
+										lengthOfRowSameColor++;
+										}	
+									}	
+								}
+							}
+						}
+					}
+					if(j!=1){
+						if(gameField[i][j-1]==Player){
+							checked[i][j-1] = 1
+							lengthOfRowSameColor=2; 
+							if(j!=2){	
+								if(gameField[i][j-2]==Player){
+									checked[i][j-2] = 1
+									lengthOfRowSameColor++;
+									if(j!=3){	
+										if(gameField[i][j-3]==Player){
+											checked[i][j-3] = 1
+											lengthOfRowSameColor++;
+										}	
+									}
+								}
+							}
+						}
+					}
+				
+				if(lengthOfRowSameColor>=4){
+					sbHasWon(Player);
+				}
+				
+				}
+			}
+			if(Player=="Computer"){
+			}
+		}
+		lengthOfRowSameColor=0;
+		
+		for(var i = 1; i<checked.length; i++){
+					for(var j = 1; j<checked[0].length;j++){
+						checked[i][j]=0; 
+					}
+				}
+/*		
+		//here we search for a diagonal going north east 4 in a row
+		for(var i = 1; i<gameField.length; i++){
+			for(var j = 1; j<gameField[0].length; j++){
+				if(gameField[i][j]==Player&&checked[i][j]==0){ //here we use the check variable to make sure that when we have a row of 3 not every one of those stones is checked and therefore
+					checked[i][j] = 1
+					if(j!=1&&i!=7){
+						if(gameField[i+1][j-1]==Player){			   //lengthOfRowSameColor would be 3 times the as big
+							checked[i+1][j-1] = 1 //1 is true 
+							lengthOfRowSameColor=2; 
+							if(j!=2&&i!=6){
+								if(gameField[i+2][j-2]==Player){
+									checked[i+2][j-2] = 1
+									lengthOfRowSameColor++;
+									if(j!=3&&i!=5){
+										if(gameField[i+3][j-3]==Player){
+										checked[i+3][j-3] = 1
+										lengthOfRowSameColor++;
+										}	
+									}	
+								}
+							}
+						}
+					}
+					if(j!=6&&i!=1){
+						if(gameField[i-1][j+1]==Player){			   //lengthOfRowSameColor would be 3 times the as big
+							checked[i-1][j+1] = 1 //1 is true 
+							lengthOfRowSameColor=2; 
+							if(j!=5&&i!=2){
+								if(gameField[i-2][j+2]==Player){
+									checked[i-2][j+2] = 1
+									lengthOfRowSameColor++;
+									if(j!=4&&i!=3){
+										if(gameField[i-3][j+3]==Player){
+										checked[i-3][j+3] = 1
+										lengthOfRowSameColor++;
+										}	
+									}	
+								}
+							}
+						}
+					}
+				
+				if(lengthOfRowSameColor>=4){
+					sbHasWon(Player);
+				}
+				
+				}
+			}
+		}
+		
+		lengthOfRowSameColor=0;
+		
+		for(var i = 1; i<checked.length; i++){
+					for(var j = 1; j<checked[0].length;j++){
+						checked[i][j]=0; 
+					}
+				}
+		
+		//here we search for a diagonal going north west 4 in a row
+		for(var i = 1; i<gameField.length; i++){
+			for(var j = 1; j<gameField[0].length; j++){
+				if(gameField[i][j]==Player&&checked[i][j]==0){ //here we use the check variable to make sure that when we have a row of 3 not every one of those stones is checked and therefore
+					checked[i][j] = 1
+					if(j!=1&&i!=1){
+						if(gameField[i-1][j-1]==Player){			   //lengthOfRowSameColor would be 3 times the as big
+							checked[i-1][j-1] = 1 //1 is true 
+							lengthOfRowSameColor=2; 
+							if(j!=2&&i!=2){
+								if(gameField[i-2][j-2]==Player){
+									checked[i-2][j-2] = 1
+									lengthOfRowSameColor++;
+									if(j!=3&&i!=3){
+										if(gameField[i-3][j-3]==Player){
+										checked[i-3][j-3] = 1
+										lengthOfRowSameColor++;
+										}	
+									}	
+								}
+							}
+						}
+					}
+					if(j!=6&&i!=7){
+						if(gameField[i+1][j+1]==Player){			   //lengthOfRowSameColor would be 3 times the as big
+							checked[i+1][j+1] = 1 //1 is true 
+							lengthOfRowSameColor=2; 
+							if(j!=5&&i!=6){
+								if(gameField[i+2][j+2]==Player){
+									checked[i+2][j+2] = 1
+									lengthOfRowSameColor++;
+									if(j!=4&&i!=5){
+										if(gameField[i+3][j+3]==Player){
+										checked[i+3][j+3] = 1
+										lengthOfRowSameColor++;
+										}	
+									}	
+								}
+							}
+						}
+					}
+				
+				if(lengthOfRowSameColor>=4){
+					sbHasWon(Player);
+				}
+				
+				}
+			}
+		}
+		
+		lengthOfRowSameColor=0;
+		*/
+	}
+	
+	function sbHasWon(Winner){
+		win = true; 
+	    $("#button1").css({"visibility":"hidden"});
+        $("#button2").css({"visibility":"hidden"});
+		$("#button3").css({"visibility":"hidden"});
+		$("#button4").css({"visibility":"hidden"});
+		$("#button5").css({"visibility":"hidden"});
+		$("#button6").css({"visibility":"hidden"});
+		$("#button7").css({"visibility":"hidden"});
+		$("#notificationField").css("font-size",80);
+		$("#notificationField").text(Winner + " has won!");	
+	}
+	
+	function computerMove(){
+		var random = Math.round(Math.random());
+		var blockHor = blockHorizontal();
+		console.log("Hor:"+blockHor[0]);
+		var blockVer = blockVertical();
+		console.log("Ver:"+blockVer[0]);
+		var blockDiaNr1 = blockDiagonalNr1();
+		console.log("Dia:"+blockDiaNr1[0]);
+		
+		if(blockHor[0]==2){					
+			markComputerMove(blockHor[1], blockHor[2]); 
+			getCurrentPlayerAndColor(); 
+			console.log("winning hor");
+		}
+		
+		else if(blockVer[0]==2){
+			markComputerMove(blockVer[1], blockVer[2]); 
+			getCurrentPlayerAndColor();  
+			console.log("winning ver");
+		}
+		else if(blockDiaNr1[0]==2){
+			markComputerMove(blockDiaNr1[1], blockDiaNr1[2]); 
+			getCurrentPlayerAndColor();  
+			console.log("winning diaNr.1");
+		}
+		
+		else if(blockHor[0]==1){
+			markComputerMove(blockHor[1], blockHor[2]); 
+			getCurrentPlayerAndColor(); 
+			console.log("Almost winning next round Hor");
+		}
+		
+		else if(blockDiaNr1[0]==1){
+			markComputerMove(blockDiaNr1[1], blockDiaNr1[2]); 
+			getCurrentPlayerAndColor();  
+			console.log("Almost winning next round DiaNr1");
+		}
+		
+		else{
+		    //here later on maybe make him search for 2 or if computer can win then random if should go for 2 or go for own win; 
+			 var random2 = Math.round(Math.random()*6)+1;
+			 var stop = 0; 
+			 for(var j = 1; j<gameField[0].length; j++){
+				 stop++;
+				 if(stop>=200){
+					 break; 
+				 }
+				 if(gameField[random2][j]!="Computer"&&gameField[random2][j]!="User"&&(j==6||(gameField[random2][j+1]=="Computer"||gameField[random2][j+1]=="User"))){// comp chooses random column and checks if free and 
+					 markComputerMove(random2, j);																													  // if the space below is ground or full
+					 getCurrentPlayerAndColor(); 
+					 stop = 0;0
+					 break;
+				 }
+				 else if(j==gameField[0].length-1){
+					if(random2==7){
+						random2=0;
+					}
+					random2++;
+					j=0;
+				 }
+			 }
+		}
+		$("#button1").prop('disabled',null); 
+		$("#button2").prop('disabled',null); 
+		$("#button3").prop('disabled',null); 
+		$("#button4").prop('disabled',null); 
+		$("#button5").prop('disabled',null); 
+		$("#button6").prop('disabled',null); 
+		$("#button7").prop('disabled',null); 
+		searchForWinner();
+	    
+	}
+   
+    function blockHorizontal(){
+		for(var i = 0; i<column.length; i++){
+				checked[i]=new Array(7); 
+		}
+		//here we install check and also reset it in further rounds such that we can check again if we have 4 in a row
+				for(var i = 1; i<checked.length; i++){
+					for(var j = 1; j<checked[0].length;j++){
+						checked[i][j]=0; 
+					}
+				}
+				
+		//here we initial parameterComputerHor
+		
+		parameterComputerHor[0]=0;
+		parameterComputerHor[1]=0;
+		parameterComputerHor[2]=0;
+		
+		for(var i = 1; i<gameField.length; i++){
+			for(var j = 1; j<gameField[0].length; j++){
+				if(gameField[i][j]=="User"&&checked[i][j]==0){ //here we use the check variable to make sure that when we have a row of 3 not every one of those stones is checked and therefore
+					checked[i][j] = 1;			   //lengthOfRowSameColor would be 3 times as big
+					if(i!=6&&i!=7){
+						if(j!=6){
+							if(gameField[i+1][j]=="User"&&typeof(gameField[i+2][j])=="undefined"&&typeof(gameField[i+2][j+1])!="undefined"){
+								if(i!=5&&gameField[i+3][j]=="User"){
+									parameterComputerHor[0] = 2; //here the user can reach a win within this term so we return 2 for an immediate threat;
+									parameterComputerHor[1] = i+2; //we return i and j as well because we need them to execute the mark function 
+									parameterComputerHor[2] = j;
+									return parameterComputerHor; 
+								}
+								if((i==3||i==2)&&gameField[i-1][j]!="Computer"){
+										//here we return our parameters to the function Computer move where we then decide, which move is the best after we evaluated them all
+										//here we check if the situation _ X _ 0 0 _ _ or _ _ 0 0 _ X _ happened where the computer should not block on the side with the most spaces like right (1) or left (2)
+										if(gameField[4][j]=="User"){ 
+											if(gameField[3][j]=="User"&&gameField[6][j]=="Computer"&&typeof(gameField[2][j])=="undefined"&&typeof(gameField[2][j+1])!="undefined"){
+												parameterComputerHor[0] = 1; //here the user can reach a win within two terms so we return 1 for a threat;
+												parameterComputerHor[1] = 2; //we return i and j as well because we need them to execute the mark function 
+												parameterComputerHor[2] = j;
+												return parameterComputerHor; 	
+											}
+											else{
+												parameterComputerHor[0] = 1; //here the user can reach a win within two terms so we return 1 for a threat;
+												parameterComputerHor[1] = i+2; //we return i and j as well because we need them to execute the mark function 
+												parameterComputerHor[2] = j;
+												return parameterComputerHor; 
+											}
+										}
+										else{
+											parameterComputerHor[0] = 1; //here the user can reach a win within two terms so we return 1 for a threat;
+											parameterComputerHor[1] = i+2; //we return i and j as well because we need them to execute the mark function 
+											parameterComputerHor[2] = j;
+											return parameterComputerHor; 
+										}
+								}
+								else{
+											parameterComputerHor[0] = 0; //here the user does not have the possibility to reach a win and we give a 0 for no threat
+											parameterComputerHor[1] = i+2; 
+											parameterComputerHor[2] = j; 
+								}
+								checked[i+1][j] = 1 //1 is true
+							}
+							else if(i<5&gameField[i+1][j]=="User"&&gameField[i+2][j]=="User"&&typeof(gameField[i+3][j])=="undefined"&&typeof(gameField[i+3][j+1])!="undefined"){
+								        parameterComputerHor[0] = 2; //here the user has 3 in a row and therefore we give a 2 for an immediate threat
+										parameterComputerHor[1] = i+3; 
+										parameterComputerHor[2] = j;
+										return parameterComputerHor;
+							}
+							//This function is used to make sure that the computer throws a token in the middle of _ X _ X _ 
+							else if((i==4||i==3||i==2)&&gameField[i+2][j]=="User"&&typeof(gameField[i+1][j])=="undefined" && typeof(gameField[i-1][j])=="undefined" && typeof(gameField[i+3][j])=="undefined"&&typeof(gameField[i+1][j+1])!="undefined"){
+										parameterComputerHor[0] = 1; //here the user can get 3 in a row within the next term and therefore we give a 1 for a threat
+										parameterComputerHor[1] = i+1; 
+										parameterComputerHor[2] = j;
+										return parameterComputerHor;
+							}
+						}
+						else{ //here j = 6 therefore we don't need to check the column under us if there is a stone in it
+							if(gameField[i+1][j]=="User"&&typeof(gameField[i+2][j])=="undefined"){
+								if(i!=5&&gameField[i+3][j]=="User"){
+									console.log("hallo");
+									parameterComputerHor[0] = 2; //here the user can reach a win within this term so we return 2 for an immediate threat;
+									parameterComputerHor[1] = i+2; //we return i and j as well because we need them to execute the mark function 
+									parameterComputerHor[2] = j;
+									return parameterComputerHor; 
+								}
+								if((i==3||i==2)&&gameField[i-1][j]!="Computer"){
+										//here we return our parameters to the function Computer move where we then decide, which move is the best after we evaluated them all
+										//here we check if the situation _ X _ 0 0 _ _ or _ _ 0 0 _ X _ happened where the computer should not block on the side with the most spaces like right (1) or left (2)
+										if(gameField[4][j]=="User"){ 
+											if(gameField[3][j]=="User"&&gameField[6][j]=="Computer"&&typeof(gameField[2][j])=="undefined"){
+												parameterComputerHor[0] = 1; //here the user can reach a win within two terms so we return 1 for a threat;
+												parameterComputerHor[1] = 2; //we return i and j as well because we need them to execute the mark function 
+												parameterComputerHor[2] = j;
+												return parameterComputerHor; 	
+											}
+											else{
+												parameterComputerHor[0] = 1; //here the user can reach a win within two terms so we return 1 for a threat;
+												parameterComputerHor[1] = i+2; //we return i and j as well because we need them to execute the mark function 
+												parameterComputerHor[2] = j;
+												return parameterComputerHor; 
+											}
+										}
+										else{
+											parameterComputerHor[0] = 1; //here the user can reach a win within two terms so we return 1 for a threat;
+											parameterComputerHor[1] = i+2; //we return i and j as well because we need them to execute the mark function 
+											parameterComputerHor[2] = j;
+											return parameterComputerHor; 
+										}
+								}
+								else{
+										parameterComputerHor[0] = 0; //here the user does not have the possibility to reach a win and we give a 0 for no threat
+										parameterComputerHor[1] = i+2; 
+										parameterComputerHor[2] = j; 
+								}
+								checked[i+1][j] = 1 //1 is true
+							}
+							else if(i<5&gameField[i+1][j]=="User"&&gameField[i+2][j]=="User"){
+									if(i!=2){
+										if(gameField[i+3][j]!="User"&&gameField[i+3][j]!="Computer"){
+											parameterComputerHor[0] = 2; //here the user has 3 in a row and therefore we give a 2 for an immediate threat
+											parameterComputerHor[1] = i+3; 
+											parameterComputerHor[2] = j;
+											return parameterComputerHor;	
+										}
+									}
+									else if(i==2){
+										if(typeof(gameField[i-1][j])=="undefined"){
+											parameterComputerHor[0] = 2; //here the user has 3 in a row and therefore we give a 2 for an immediate threat
+											parameterComputerHor[1] = i-1; 
+											parameterComputerHor[2] = j;
+											return parameterComputerHor;
+										}
+									}
+							}
+							else if((i==4||i==3||i==2)&&gameField[i+2][j]=="User"&&typeof(gameField[i+1][j])=="undefined"&&typeof(gameField[i-1][j])=="undefined"&&typeof(gameField[i+3][j])=="undefined"){
+										parameterComputerHor[0] = 1; //here the user can get 3 in a row within the next term and therefore we give a 1 for a threat
+										parameterComputerHor[1] = i+1; 
+										parameterComputerHor[2] = j;
+										return parameterComputerHor;
+							}
+						}
+					}
+					if(i!=2&i!=1){
+						if(j!=6){
+							if(i!=7&&gameField[i+1][j]=="User"&&typeof(gameField[i-1][j])=="undefined"&&typeof(gameField[i-1][j+1])!="undefined"){
+									if(gameField[i-2][j]=="User"){
+										parameterComputerHor[0] = 2; //here the user can reach a win within this term so we return 2 for an immediate threat;
+										parameterComputerHor[1] = i-1; //we return i and j as well because we need them to execute the mark function 
+										parameterComputerHor[2] = j;
+										return parameterComputerHor; 
+									}
+									if((i==4||i==5&&gameField[i+1][j]!="Computer"&&gameField[i-1][j]!="User"&&gameField[i-1][j]!="Computer")){	
+										//here we return our parameters to the function Computer move where we then decide, which move is the best after we evaluated them all
+										//here we check if the situation _ X _ 0 0 _ _ or _ _ 0 0 _ X _ happened where the computer should not block on the side with the most spaces like right (1) or left (2)
+										if(gameField[4][j]=="User"){ 
+											if(gameField[5][j]=="User"&&gameField[2][j]=="Computer"&&typeof(gameField[6][j])=="undefined"&&typeof(gameField[6][j+1])!="undefined"){
+												parameterComputerHor[0] = 1; //here the user can reach a win within two terms so we return 1 for a threat;
+												parameterComputerHor[1] = 6; //we return i and j as well because we need them to execute the mark function 
+												parameterComputerHor[2] = j;
+												return parameterComputerHor; 	
+											}
+											else{
+												parameterComputerHor[0] = 1; //here the user can reach a win within two terms so we return 1 for a threat;
+												parameterComputerHor[1] = i-1; //we return i and j as well because we need them to execute the mark function 
+												parameterComputerHor[2] = j;
+												return parameterComputerHor; 
+											}
+										}
+										else{
+											parameterComputerHor[0] = 1; //here the user can reach a win within two terms so we return 1 for a threat;
+											parameterComputerHor[1] = i-1; //we return i and j as well because we need them to execute the mark function 
+											parameterComputerHor[2] = j;
+											return parameterComputerHor; 
+										}
+								}
+								else{
+										parameterComputerHor[0] = 0; //here the user does not have the possibility to reach a win and we give a 0 for no threat
+										parameterComputerHor[1] = i-2; 
+										parameterComputerHor[2] = j; 
+								}
+								checked[i+1][j] = 1 //1 is true
+							}
+							else if(i>3&gameField[i-1][j]=="User"&&gameField[i-2][j]=="User"&&typeof(gameField[i-3][j])=="undefined"&&typeof(gameField[i-3][j+1])!="undefined"){
+								        parameterComputerHor[0] = 2;//here the user has 3 in a row and therefore we give a 2 for an immediate threat
+										parameterComputerHor[1] = i-3; 
+										parameterComputerHor[2] = j;
+										return parameterComputerHor;
+							}
+						}
+						else{							//here j = 6 therefore we don't need to check the column under us if there is a stone in it
+							if(i!=7&&gameField[i+1][j]=="User"&&typeof(gameField[i-1][j])=="undefined"){
+									if(gameField[i-2][j]=="User"){
+										console.log("hallo");
+										parameterComputerHor[0] = 2; //here the user can reach a win within this term so we return 2 for an immediate threat;
+										parameterComputerHor[1] = i-1; //we return i and j as well because we need them to execute the mark function 
+										parameterComputerHor[2] = j;
+										return parameterComputerHor; 
+									}
+									if(i==4||i==5){	
+										//here we return our parameters to the function Computer move where we then decide, which move is the best after we evaluated them all
+										//here we check if the situation _ X _ 0 0 _ _ or _ _ 0 0 _ X _ happened where the computer should not block on the side with the most spaces like right (1) or left (2)
+										if(gameField[4][j]=="User"){ 
+											if(gameField[5][j]=="User"&&gameField[2][j]=="Computer"&&typeof(gameField[6][j])=="undefined"){
+												parameterComputerHor[0] = 1; //here the user can reach a win within two terms so we return 1 for a threat;
+												parameterComputerHor[1] = 6; //we return i and j as well because we need them to execute the mark function 
+												parameterComputerHor[2] = j;
+												return parameterComputerHor; 	
+											}
+											else{
+												parameterComputerHor[0] = 1; //here the user can reach a win within two terms so we return 1 for a threat;
+												parameterComputerHor[1] = i-1; //we return i and j as well because we need them to execute the mark function 
+												parameterComputerHor[2] = j;
+												return parameterComputerHor; 
+											}
+										}
+										else{
+											parameterComputerHor[0] = 1; //here the user can reach a win within two terms so we return 1 for a threat;
+											parameterComputerHor[1] = i-1; //we return i and j as well because we need them to execute the mark function 
+											parameterComputerHor[2] = j;
+											return parameterComputerHor; 
+										}
+									}
+								else{
+										parameterComputerHor[0] = 0; //here the user does not have the possibility to reach a win and we give a 0 for no threat
+										parameterComputerHor[1] = i-1; 
+										parameterComputerHor[2] = j; 
+								}
+								checked[i+1][j] = 1 //1 is true
+							}
+							else if(i>3&gameField[i-1][j]=="User"&&gameField[i-2][j]=="User"&&(typeof(gameField[i-3][j])=="undefined")&&typeof(gameField[i-3][j+1])!="undefined"){
+								        parameterComputerHor[0] = 2;//here the user has 3 in a row and therefore we give a 2 for an immediate threat
+										parameterComputerHor[1] = i-3; 
+										parameterComputerHor[2] = j;
+										return parameterComputerHor; 
+							}
+						}
+				    }
+			    }	
+			}
+		}
+		return parameterComputerHor;
+	}
+	
+	function blockVertical(){
+		
+		//here we initial parameterComputerVer 
+		
+		parameterComputerVer[0]=0;
+		parameterComputerVer[1]=0;
+		parameterComputerVer[2]=0;
+		
+		for(var i = 0; i<column.length; i++){
+				checked[i]=new Array(7); 
+		}
+		//here we install check and also reset it in further rounds such that we can check again if we have 4 in a row
+				for(var i = 1; i<checked.length; i++){
+					for(var j = 1; j<checked[0].length;j++){
+						checked[i][j]=0; 
+					}
+				}
+				
+//We check for 2 in a vertical row
+		
+		for(var i = 1; i<gameField.length; i++){
+			for(var j = gameField[0].length; j>0; j--){
+				if(gameField[i][j]=="User"&&checked[i][j]==0){ //here we use the check variable to make sure that when we have a row of 3 not every one of those stones is checked and therefore
+					checked[i][j] = 1;			   //lengthOfRowSameColor would be 3 times as big
+					if(j!=1&&j!=2&&j!=3){
+						if(gameField[i][j-1]=="User"&&gameField[i][j-2]=="User"&&typeof(gameField[i][j-3])=="undefined"){
+							checked[i][j] = 1 //1 is true 
+							parameterComputerVer[0]=2;//here we have 3 in a row vertical and therefore need to block this is an immediate threat and therefore we give a 2
+							parameterComputerVer[1]=i; //we also have to return i and j to give the markComputerMove parameters for later on
+							parameterComputerVer[2]=j-3;
+							return parameterComputerVer;
+						}
+						else if(gameField[i][j-1]=="User"&&typeof(gameField[i][j-2])=="undefined"){
+							checked[i][j] = 1 //1 is true 
+							parameterComputerVer[0]=0;//here we only have tokens in a vertical row and no threat to win so we give the winning parameter the value 0 for false
+							parameterComputerVer[1]=i; //we also have to return i and j to give the markComputerMove parameters for later on
+							parameterComputerVer[2]=j-2;
+							return parameterComputerVer;
+						}		
+					}
+			    }	
+			}
+		}
+		return parameterComputerVer;
+	}
+	
+	function blockDiagonalNr1(){
+		
+		//here we initial parameterComputerVer 
+		
+		parameterComputerDiaNr1[0]=0;
+		parameterComputerDiaNr1[1]=0;
+		parameterComputerDiaNr1[2]=0;
+		
+		for(var i = 0; i<column.length; i++){
+				checked[i]=new Array(7); 
+		}
+		//here we install check and also reset it in further rounds such that we can check again if we have 4 in a row
+				for(var i = 1; i<checked.length; i++){
+					for(var j = 1; j<checked[0].length;j++){
+						checked[i][j]=0; 
+					}
+				}
+				
+		//We check for 2 in a vertical row
+		
+		for(var i = 1; i<gameField.length; i++){
+			for(var j = 1; j<gameField[0].length; j++){
+				if(gameField[i][j]=="User"&&checked[i][j]==0){ //here we use the check variable to make sure that when we have a row of 3 not every one of those stones is checked and therefore
+					checked[i][j] = 1;			   //lengthOfRowSameColor would be 3 times as big
+					if(j!=1&&i!=7){
+						// here we block a diagonal with X, X, X, _
+						if(gameField[i+1][j-1]=="User"&&gameField[i+2][j-2]=="User"&&typeof(gameField[i+3][j-3])=="undefined"&&typeof(gameField[i+3][j-2])!="undefined"){
+							checked[i][j] = 1 //1 is true 
+							parameterComputerDiaNr1[0]=2;//here we have 3 in a row horizontal and therefore need to block this is an immediate threat and therefore we give a 2
+							parameterComputerDiaNr1[1]=i+3; //we also have to return i and j to give the markComputerMove parameters for later on
+							parameterComputerDiaNr1[2]=j-3;
+							return parameterComputerDiaNr1;
+						}
+						if(gameField[i+1][j-1]=="User"&&gameField[i+2][j-2]=="User"&&typeof(gameField[i+3][j-3])=="undefined"&&typeof(gameField[i+3][j-2])!="undefined"){
+							checked[i][j] = 1 //1 is true 
+							parameterComputerDiaNr1[0]=2;//here we have 3 in a row horizontal and therefore need to block this is an immediate threat and therefore we give a 2
+							parameterComputerDiaNr1[1]=i+3; //we also have to return i and j to give the markComputerMove parameters for later on
+							parameterComputerDiaNr1[2]=j-3;
+							return parameterComputerDiaNr1;
+						}
+						// here we block a diagonal with X,X, _ , X
+						else if(i<=4 && j>=4 && gameField[i+1][j-1]=="User"&&typeof(gameField[i+2][j-2])=="undefined"&&typeof(gameField[i+2][j-1])!="undefined" &&gameField[i+3][j-3]=="User"){
+								parameterComputerDiaNr1[0] = 2; //here the user can reach a win within this term so we return 2 for an immediate threat;
+								parameterComputerDiaNr1[1] = i+2; //we return i and j as well because we need them to execute the mark function 
+								parameterComputerDiaNr1[2] = j-2;
+								return parameterComputerDiaNr1; 
+						}
+						//here we block a diagonal with X, _, X, X
+						else if(1<i && i<=5 && 6>j && j>=3 && typeof(gameField[i-1][j+1])=="undefined"&&(typeof(gameField[i-1][j+2])!="undefined"||j==5)&&gameField[i+1][j-1]=="User"&& gameField[i+2][j-2]=="User"){
+								parameterComputerDiaNr1[0] = 2; //here the user can reach a win within this term so we return 2 for an immediate threat;
+								parameterComputerDiaNr1[1] = i-1; //we return i and j as well because we need them to execute the mark function 
+								parameterComputerDiaNr1[2] = j+1;
+								return parameterComputerDiaNr1; 
+						}
+						//here we prevent a diagonal with _, X, _, X, _
+						else if(1<i && i<=4 && 6>j && j>=4 && typeof(gameField[i-1][j+1]) =="undefined" && typeof(gameField[i+1][j-1])=="undefined" && (typeof(gameField[i+1][j])!="undefined" )&&  gameField[i+2][j-2] == "User" && typeof(gameField[i+3][j-3])=="undefined"){
+								parameterComputerDiaNr1[0] = 2; //here the user can reach a win within this term so we return 2 for an immediate threat;
+								parameterComputerDiaNr1[1] = i+1; //we return i and j as well because we need them to execute the mark function 
+								parameterComputerDiaNr1[2] = j-1;
+								return parameterComputerDiaNr1; 
+						}
+						else{
+							checked[i][j] = 1 //1 is true 
+							parameterComputerDiaNr1[0]=0;//here we only have tokens in a vertical row and no threat to win so we give the winning parameter the value 0 for false
+							parameterComputerDiaNr1[1]=i+3; //we also have to return i and j to give the markComputerMove parameters for later on
+							parameterComputerDiaNr1[2]=j-3;
+						}
+					}
+			    }	
+			}
+		}
+		return parameterComputerDiaNr1;
+	}
+	
+	function markComputerMove(i, j){
+		switch(i){
+			case 1: switch(j){
+						case 1: $("#hole1").css("background-color",currentColor);
+								gameField[1][1]=currentPlayer;
+				                $("#button1").css({"visibility":"hidden"});
+								break;
+						case 2: $("#hole8").css("background-color",currentColor);
+								gameField[1][2]=currentPlayer;
+								column[1]++;
+								break;
+						case 3: $("#hole15").css("background-color",currentColor);
+								gameField[1][3]=currentPlayer;
+								column[1]++;
+								break;
+						case 4: $("#hole22").css("background-color",currentColor);
+								gameField[1][4]=currentPlayer;
+								column[1]++;
+								break;
+						case 5: $("#hole29").css("background-color",currentColor);
+								gameField[1][5]=currentPlayer;
+								column[1]++;
+								break;
+						case 6: $("#hole36").css("background-color",currentColor);
+								gameField[1][6]=currentPlayer;
+								column[1]++;
+								break;
+						default: console.log("Error with j in ComputerMove");
+					}
+					break;
+					
+			case 2: switch(j){
+						case 1: $("#hole2").css("background-color",currentColor);
+								gameField[2][1]=currentPlayer;
+								$("#button2").css({"visibility":"hidden"});
+								break;
+						case 2: $("#hole9").css("background-color",currentColor);
+								gameField[2][2]=currentPlayer;
+								column[2]++;
+								break;
+						case 3: $("#hole16").css("background-color",currentColor);
+								gameField[2][3]=currentPlayer;
+								column[2]++;
+								break;
+						case 4: $("#hole23").css("background-color",currentColor);
+								gameField[2][4]=currentPlayer;
+								column[2]++;
+								break;
+						case 5: $("#hole30").css("background-color",currentColor);
+								gameField[2][5]=currentPlayer;
+								column[2]++;
+								break;
+						case 6: $("#hole37").css("background-color",currentColor);
+								gameField[2][6]=currentPlayer;
+								column[2]++;
+								break;
+						default: console.log("Error with j in ComputerMove");
+					}
+					break;
+					
+			case 3: switch(j){
+						case 1: $("#hole3").css("background-color",currentColor);
+								gameField[3][1]=currentPlayer;
+								$("#button3").css({"visibility":"hidden"});
+								break;
+						case 2: $("#hole10").css("background-color",currentColor);
+								gameField[3][2]=currentPlayer;
+								column[3]++;
+								break;
+						case 3: $("#hole17").css("background-color",currentColor);
+								gameField[3][3]=currentPlayer;
+								column[3]++;
+								break;
+						case 4: $("#hole24").css("background-color",currentColor);
+								gameField[3][4]=currentPlayer;
+								column[3]++;
+								break;
+						case 5: $("#hole31").css("background-color",currentColor);
+								gameField[3][5]=currentPlayer;
+								column[3]++;
+								break;
+						case 6: $("#hole38").css("background-color",currentColor);
+								gameField[3][6]=currentPlayer;
+								column[3]++;
+								break;
+						default: console.log("Error with j in ComputerMove");
+					}
+					break;
+					
+			case 4: switch(j){
+						case 1: $("#hole4").css("background-color",currentColor);
+								gameField[4][1]=currentPlayer;
+								$("#button4").css({"visibility":"hidden"});
+								break;
+						case 2: $("#hole11").css("background-color",currentColor);
+								gameField[4][2]=currentPlayer;
+								column[4]++;
+								break;
+						case 3: $("#hole18").css("background-color",currentColor);
+								gameField[4][3]=currentPlayer;
+								column[4]++;
+								break;
+						case 4: $("#hole25").css("background-color",currentColor);
+								gameField[4][4]=currentPlayer;
+								column[4]++;
+								break;
+						case 5: $("#hole32").css("background-color",currentColor);
+								gameField[4][5]=currentPlayer;
+								column[4]++;
+								break;
+						case 6: $("#hole39").css("background-color",currentColor);
+								gameField[4][6]=currentPlayer;
+								column[4]++;
+								break;
+						default: console.log("Error with j in ComputerMove");
+					}
+					break;
+					
+			case 5: switch(j){
+						case 1: $("#hole5").css("background-color",currentColor);
+								gameField[5][1]=currentPlayer;
+								$("#button5").css({"visibility":"hidden"});
+								break;
+						case 2: $("#hole12").css("background-color",currentColor);
+								gameField[5][2]=currentPlayer;
+								column[5]++;
+								break;
+						case 3: $("#hole19").css("background-color",currentColor);
+								gameField[5][3]=currentPlayer;
+								column[5]++;
+								break;
+						case 4: $("#hole26").css("background-color",currentColor);
+								gameField[5][4]=currentPlayer;
+								column[5]++;
+								break;
+						case 5: $("#hole33").css("background-color",currentColor);
+								gameField[5][5]=currentPlayer;
+								column[5]++;
+								break;
+						case 6: $("#hole40").css("background-color",currentColor);
+								gameField[5][6]=currentPlayer;
+								column[5]++;
+								break;
+						default: console.log("Error with j in ComputerMove");
+					}
+					break;
+			
+			case 6: switch(j){
+						case 1: $("#hole6").css("background-color",currentColor);
+								gameField[6][1]=currentPlayer;
+								$("#button6").css({"visibility":"hidden"});
+								break;
+						case 2: $("#hole13").css("background-color",currentColor);
+								gameField[6][2]=currentPlayer;
+								column[6]++;
+								break;
+						case 3: $("#hole20").css("background-color",currentColor);
+								gameField[6][3]=currentPlayer;
+								column[6]++;
+								break;
+						case 4: $("#hole27").css("background-color",currentColor);
+								gameField[6][4]=currentPlayer;
+								column[6]++;
+								break;
+						case 5: $("#hole34").css("background-color",currentColor);
+								gameField[6][5]=currentPlayer;
+								column[6]++;
+								break;
+						case 6: $("#hole41").css("background-color",currentColor);
+								gameField[6][6]=currentPlayer;
+								column[6]++;
+								break;
+						default: console.log("Error with j in ComputerMove");
+					}
+					break;
+					
+			case 7: switch(j){
+						case 1: $("#hole7").css("background-color",currentColor);
+								gameField[7][1]=currentPlayer;
+								$("#button7").css({"visibility":"hidden"});
+								break;
+						case 2: $("#hole14").css("background-color",currentColor);
+								gameField[7][2]=currentPlayer;
+								column[7]++;
+								break;
+						case 3: $("#hole21").css("background-color",currentColor);
+								gameField[7][3]=currentPlayer;
+								column[7]++;
+								break;
+						case 4: $("#hole28").css("background-color",currentColor);
+								gameField[7][4]=currentPlayer;
+								column[7]++;
+								break;
+						case 5: $("#hole35").css("background-color",currentColor);
+								gameField[7][5]=currentPlayer;
+								column[7]++;
+								break;
+						case 6: $("#hole42").css("background-color",currentColor);
+								gameField[7][6]=currentPlayer;
+								column[7]++;
+								break;
+						default: console.log("Error with j in ComputerMove");
+					}
+					break;
+			
+			default: console.log("Error with i in ComputerMove"+ i);
+			         break; 
+		}
+	}
+	
+	function computerFirstMove(){
+		//we split the first move of the Computer to make him choose randomly a column with the probabilities : 2%, 5%, 10%, 66%, 10%, 5%; 2%
+		var random = Math.round(Math.random()*100);
+		if(random<67){
+			$("#hole39").css("background-color",currentColor);
+			gameField[4][6]=currentPlayer;
+			column[4]++;
+		}
+		else if(random<77){
+			$("#hole38").css("background-color",currentColor);
+			gameField[3][6]=currentPlayer;
+			column[3]++;
+		}
+		else if(random<87){
+			$("#hole40").css("background-color",currentColor);
+			gameField[5][7]=currentPlayer;
+			column[5]++;
+		}
+		else if(random<92){
+			$("#hole37").css("background-color",currentColor);
+			gameField[2][6]=currentPlayer;
+			column[2]++;
+		}
+		else if(random<97){
+			$("#hole41").css("background-color",currentColor);
+			gameField[6][6]=currentPlayer;
+			column[6]++;
+		}
+		else if(random<99){
+			$("#hole36").css("background-color",currentColor);
+			gameField[1][7]=currentPlayer;
+			column[1]++;
+		}
+		else{ //random<101
+			$("#hole42").css("background-color",currentColor);
+			gameField[7][6]=currentPlayer;
+			column[7]++;
+		}
+		getCurrentPlayerAndColor(); 
+	}
+	
+	$(document).ready(main);
