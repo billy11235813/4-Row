@@ -247,13 +247,13 @@
 		if(random==0){
 			currentPlayer = "User";
 			currentColor = "yellow"; 
-			$("#notificationField").text("Du darfst anfangen.")
+			$("#notificationField").text("You will begin.")
 		}
 		else{
 			currentPlayer = "Computer";
 			currentColor = "red"; 
 			setTimeout(computerFirstMove, computerTime);
-			$("#notificationField").text("Der Computer darf anfangen.")
+			$("#notificationField").text("The Computer will begin.")
 		}
 	}
 	
