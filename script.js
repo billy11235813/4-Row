@@ -262,7 +262,7 @@
 			if(currentPlayer == "User"){
 				currentColor = "red"; 
 				currentPlayer = "Computer"
-				$("#notificationField").text("Der Computer ist am Zug.")
+				$("#notificationField").text("It's the Computer's turn.")
 				$("#button1").prop('disabled','true'); 
 				$("#button2").prop('disabled','true'); 
 				$("#button3").prop('disabled','true'); 
@@ -275,7 +275,7 @@
 			else{
 				currentColor = "yellow";
 				currentPlayer ="User"; 
-				$("#notificationField").text("Du bist am Zug.")
+				$("#notificationField").text("It's your turn.")
 			}
 		}
 	}
